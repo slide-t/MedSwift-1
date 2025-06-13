@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Local JSON Product Editor</title>
+  <style>
+  body {
+  font-family: sans-serif;
+  padding: 20px;
+  background: #f1f1f1;
+}
+
+h2, h3 {
+  color: #00796b;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  background: #00796b;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #004d40;
+}
+
+pre {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+  overflow-x: auto;
+}
+  </style>
+</head>
+<body>
+
+  <h2>Add New Product</h2>
+  <form id="product-form">
+    <input type="text" id="name" placeholder="Product Name" required />
+    <input type="text" id="description" placeholder="Description" required />
+    <input type="text" id="price" placeholder="Price (e.g. ₦1500)" required />
+    <input type="url" id="image" placeholder="Image URL" required />
+    <button type="submit">Add Product</button>
+  </form>
+
+  <button id="download-btn">Download JSON</button>
+
+  <h3>Product Preview</h3>
+  <pre id="json-output"></pre>
+
+  <script>
+  const form = document.getElementById('product-form');
+const output = document.getElementById('json-output');
+const downloadBtn = document.getElementById('download-btn');
+
+let products = [];
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const description = document.getElementById('description').value;
+  const price = document.getElementById('price').value;
+  const image = document.getElementById('image').value;
+
+  const newProduct = {
+    id: products.length + 1,
+    name,
+    description,
+    price,
+    image
+  };
+
+  products.push(newProduct);
+  output.textContent = JSON.stringify(products, null, 2);
+
+  form.reset();
+});
+
+downloadBtn.addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(products, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'products.json';
+  link.click();
+});
+  
+  </script>
+</body>
+</html>
